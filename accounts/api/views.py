@@ -33,7 +33,7 @@ class AccountViewSet(viewsets.ViewSet):
                 "success": False,
                 "message": "Please check input",
                 "errors": serializer.errors
-            }, status = 400)
+            }, status=400)
 
         username = serializer.validated_data['username']
         password = serializer.validated_data['password']
