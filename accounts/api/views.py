@@ -27,6 +27,9 @@ class AccountViewSet(viewsets.ViewSet):
 
     @action(methods=['POST'], detail=False)
     def login(self, request):
+        """
+        默认的 username 是 admin, password 也是 admin
+        """
         serializer = LoginSerializer(data=request.data)
         if not serializer.is_valid():
             return Response({
@@ -50,6 +53,16 @@ class AccountViewSet(viewsets.ViewSet):
             "user": UserSerializer(instance=user).data,
         })
 
+
+    @action(methods=['POST'], detail=False)
+    def logout(self, request):
+        """
+        登出当前用户
+        """
+        django_logout(request)
+        return Response({"success": True})
+
+
     @action(methods=['POST'], detail=False)
     def signup(self, request):
         """
@@ -68,7 +81,7 @@ class AccountViewSet(viewsets.ViewSet):
         return Response({
             'success': True,
             'user': UserSerializer(user).data,
-        })
+        }, status=201)
 
     @action(methods=['GET'], detail=False)
     def login_status(self, request):
@@ -77,12 +90,3 @@ class AccountViewSet(viewsets.ViewSet):
             data['user'] = UserSerializer(request.user).data
 
         return Response(data)
-
-
-    @action(methods=['POST'], detail=False)
-    def logout(self, request):
-        """
-        登出当前用户
-        """
-        django_logout(request)
-        return Response({"success": True})
