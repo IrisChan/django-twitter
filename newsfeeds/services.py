@@ -1,0 +1,1 @@
+from newfeeds.models import NewFeed
