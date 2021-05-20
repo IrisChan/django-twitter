@@ -38,6 +38,7 @@ class TweetViewSet(viewsets.GenericViewSet,
             user_id=request.query_params['user_id']
         ).order_by('-created_at')
 
+        # many=True意思是返回的是一个dict类型
         serializer = TweetSerializer(tweets, many=True)
         # 一般来说json格式的response默认都要用hash格式，而不能用list格式
         return Response({'tweets': serializer.data})
@@ -61,7 +62,7 @@ class TweetViewSet(viewsets.GenericViewSet,
                 'success': False,
                 'message': "Please check input",
                 'errors': serializer.errors,
-            },status=400)
+            }, status=400)
 
         tweet = serializer.save()
         NewsFeedService.fanout_to_followers(tweet)
