@@ -8,6 +8,7 @@ from comments.models import Comment
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from utils.decorators import required_params
 
 
 class CommentViewSet(viewsets.GenericViewSet):
@@ -30,15 +31,8 @@ class CommentViewSet(viewsets.GenericViewSet):
 
         return [AllowAny()]
 
+    @required_params(params=['tweet_id'])
     def list(self, request, *args, **kwargs):
-        if 'tweet_id' not in request.query_params:
-            return Response(
-                {
-                    'message': 'missing tweet_id in request',
-                    'success': False,
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
         queryset = self.get_queryset()
         # 如果没有prefetch_related, 那么因为comment里面有一个user的foreign key
         # 每次查询n个comments就会产生n次的user查询
