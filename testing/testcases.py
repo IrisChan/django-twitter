@@ -46,3 +46,10 @@ class TestCase(DjangoTestCase):
             content = 'default tweet content'
 
         return Tweet.objects.create(user=user, content=content)
+
+
+    def create_user_and_client(self, *args, **kwargs):
+        user = self.create_user(*args, **kwargs)
+        client = APIClient()
+        client.force_authenticate(user)
+        return user, client
