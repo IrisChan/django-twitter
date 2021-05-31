@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase as DjangoTestCase
 from likes.models import Like
+from newsfeeds.models import NewsFeed
 from rest_framework.test import APIClient
 from tweets.models import Tweet
 
@@ -32,6 +33,9 @@ class TestCase(DjangoTestCase):
         # 不能写成User.objects.create()
         # 因为password需要被加密，username和email需要进行处理
         return User.objects.create_user(username, email, password)
+
+    def create_newsfeed(self, user, tweet):
+        return NewsFeed.objects.create(user=user, tweet=tweet)
 
     def create_like(self, user, target):
         instance, _ = Like.objects.get_or_create(

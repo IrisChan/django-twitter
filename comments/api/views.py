@@ -43,7 +43,11 @@ class CommentViewSet(viewsets.GenericViewSet):
         comments = self.filter_queryset(queryset)\
             .prefetch_related('user')\
             .order_by('created_at')
-        serializer = CommentSerializer(comments, many=True)
+        serializer = CommentSerializer(
+            comments,
+            context={'request': request},
+            many=True,
+        )
         return Response(
             {
                 'comments': serializer.data
@@ -70,7 +74,7 @@ class CommentViewSet(viewsets.GenericViewSet):
         # save 方法触发serializer里的create方法，点金save的具体视线里可以提到
         comment = serializer.save()
         return Response(
-            CommentSerializer(comment).data,
+            CommentSerializer(comment, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
         )
 
@@ -90,7 +94,7 @@ class CommentViewSet(viewsets.GenericViewSet):
         # save 是根据 instance 参数有没有传来决定是触发 create 还是 update
         comment = serializer.save()
         return Response(
-            CommentSerializer(comment).data,
+            CommentSerializer(comment, context={'request': request}).data,
             status=status.HTTP_200_OK,
         )
 
